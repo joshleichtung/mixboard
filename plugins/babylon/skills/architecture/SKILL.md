@@ -1,5 +1,5 @@
 ---
-name: architecture
+name: babylon-architecture
 description: Babylon.js architecture patterns, code assessment, refactoring, and performance optimization
 ---
 

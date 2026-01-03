@@ -1,5 +1,5 @@
 ---
-name: shaders
+name: babylon-shaders
 description: Babylon.js materials, shaders, cel-shading, lighting, and visual effects
 ---
 

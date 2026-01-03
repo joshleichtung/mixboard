@@ -1,5 +1,5 @@
 ---
-name: web-audio-starter
+name: hackathon-web-audio-starter
 description: Quick Web Audio API starter code for hackathons
 ---
 

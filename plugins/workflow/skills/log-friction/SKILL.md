@@ -1,5 +1,5 @@
 ---
-name: log-friction
+name: workflow-log-friction
 description: "Log workflow friction - something that slowed you down or was annoying"
 category: feedback
 complexity: simple

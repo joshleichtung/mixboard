@@ -1,5 +1,5 @@
 ---
-name: log-win
+name: workflow-log-win
 description: "Log a workflow win - something that worked well"
 category: feedback
 complexity: simple

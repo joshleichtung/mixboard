@@ -1,5 +1,5 @@
 ---
-name: quick-feature
+name: hackathon-quick-feature
 description: Implement a feature quickly for hackathon time pressure
 ---
 

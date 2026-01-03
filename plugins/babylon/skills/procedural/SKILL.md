@@ -1,5 +1,5 @@
 ---
-name: procedural
+name: babylon-procedural
 description: Procedural generation patterns for Babylon.js - noise, terrain, distribution, mesh generation
 ---
 

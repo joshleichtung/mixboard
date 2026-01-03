@@ -1,5 +1,5 @@
 ---
-name: weekly-review
+name: workflow-weekly-review
 description: "Interactive weekly review of workflow, wins, friction, and ideas"
 category: feedback
 complexity: standard

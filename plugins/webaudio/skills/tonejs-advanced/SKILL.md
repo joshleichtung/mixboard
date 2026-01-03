@@ -1,5 +1,5 @@
 ---
-name: tonejs-advanced
+name: webaudio-tonejs-advanced
 description: "Advanced Tone.js audio synthesis and scheduling. Activates for: Transport timing, synth architecture, effect chains, AudioWorklet integration, Web Audio optimization, sequencer patterns, audio scheduling. Does NOT activate for: basic audio playback, HTML5 Audio API, or non-audio projects."
 category: dev
 ---

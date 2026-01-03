@@ -1,5 +1,5 @@
 ---
-name: bootstrap
+name: hackathon-bootstrap
 description: Bootstrap a hackathon project with T3/lightweight stack
 ---
 

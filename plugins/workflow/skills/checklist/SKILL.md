@@ -1,5 +1,5 @@
 ---
-name: checklist
+name: workflow-checklist
 description: "Run development checklists interactively"
 category: workflow
 complexity: simple

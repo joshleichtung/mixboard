@@ -1,5 +1,5 @@
 ---
-name: log-idea
+name: workflow-log-idea
 description: "Log an improvement idea or feature request"
 category: feedback
 complexity: simple

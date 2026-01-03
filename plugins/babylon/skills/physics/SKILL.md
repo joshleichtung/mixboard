@@ -1,5 +1,5 @@
 ---
-name: physics
+name: babylon-physics
 description: Babylon.js physics, movement, collision detection, character controllers, and camera systems
 ---
 
