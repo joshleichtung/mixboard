@@ -1,0 +1,55 @@
+{
+  "name": "mixboard",
+  "owner": {
+    "name": "Josh"
+  },
+  "metadata": {
+    "description": "Composable skill packs for different project types",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "nextjs",
+      "source": "./plugins/nextjs",
+      "description": "Next.js 14+ App Router patterns, Server Actions, and SSR/ISR strategies",
+      "category": "web",
+      "keywords": ["nextjs", "react", "ssr", "app-router"]
+    },
+    {
+      "name": "webaudio",
+      "source": "./plugins/webaudio",
+      "description": "Tone.js synthesis, Web Audio API, scheduling, and audio worklets",
+      "category": "audio",
+      "keywords": ["audio", "tone.js", "webaudio", "synthesis", "music"]
+    },
+    {
+      "name": "babylon",
+      "source": "./plugins/babylon",
+      "description": "Babylon.js procedural generation, shaders, physics, and architecture patterns",
+      "category": "gamedev",
+      "keywords": ["babylon", "3d", "gamedev", "webgl", "procedural"]
+    },
+    {
+      "name": "ios",
+      "source": "./plugins/ios",
+      "description": "iOS and SwiftUI development patterns",
+      "category": "mobile",
+      "keywords": ["ios", "swift", "swiftui", "mobile"]
+    },
+    {
+      "name": "hackathon",
+      "source": "./plugins/hackathon",
+      "description": "Quick bootstrapping and rapid prototyping for time pressure",
+      "category": "workflow",
+      "keywords": ["hackathon", "bootstrap", "rapid", "prototype"]
+    },
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow",
+      "description": "Development workflow tracking - wins, friction, ideas, weekly reviews",
+      "category": "workflow",
+      "keywords": ["workflow", "productivity", "retrospective"]
+    }
+  ]
+}

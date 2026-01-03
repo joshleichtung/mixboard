@@ -1,0 +1,5 @@
+{
+  "name": "nextjs",
+  "description": "Next.js 14+ App Router patterns, Server Actions, and SSR/ISR strategies",
+  "version": "0.1.0"
+}
