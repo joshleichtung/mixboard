@@ -1,5 +1,0 @@
-{
-  "name": "webaudio",
-  "description": "Tone.js synthesis, Web Audio API, scheduling, and audio worklets",
-  "version": "0.1.0"
-}

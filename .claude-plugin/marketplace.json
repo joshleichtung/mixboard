@@ -17,11 +17,11 @@
       "keywords": ["nextjs", "react", "ssr", "app-router"]
     },
     {
-      "name": "webaudio",
-      "source": "./plugins/webaudio",
-      "description": "Tone.js synthesis, Web Audio API, scheduling, and audio worklets",
+      "name": "audio",
+      "source": "./plugins/audio",
+      "description": "Audio/music development - Web Audio, Tone.js, iOS Core Audio, sequencers",
       "category": "audio",
-      "keywords": ["audio", "tone.js", "webaudio", "synthesis", "music"]
+      "keywords": ["audio", "tone.js", "webaudio", "ios", "core-audio", "music", "sequencer"]
     },
     {
       "name": "babylon",
