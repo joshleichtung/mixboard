@@ -17,11 +17,11 @@
       "keywords": ["nextjs", "react", "ssr", "app-router"]
     },
     {
-      "name": "audio",
-      "source": "./plugins/audio",
-      "description": "Audio/music development - Web Audio, Tone.js, iOS Core Audio, sequencers",
+      "name": "webaudio",
+      "source": "./plugins/webaudio",
+      "description": "Web Audio development - Tone.js, sequencers, browser audio synthesis",
       "category": "audio",
-      "keywords": ["audio", "tone.js", "webaudio", "ios", "core-audio", "music", "sequencer"]
+      "keywords": ["audio", "tone.js", "webaudio", "synthesis", "music", "sequencer"]
     },
     {
       "name": "babylon",
@@ -33,9 +33,9 @@
     {
       "name": "ios",
       "source": "./plugins/ios",
-      "description": "iOS and SwiftUI development patterns",
+      "description": "iOS development - SwiftUI, Core Audio, AVFoundation, audio apps",
       "category": "mobile",
-      "keywords": ["ios", "swift", "swiftui", "mobile"]
+      "keywords": ["ios", "swift", "swiftui", "mobile", "core-audio", "avfoundation"]
     },
     {
       "name": "hackathon",

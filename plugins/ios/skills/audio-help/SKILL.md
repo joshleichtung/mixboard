@@ -1,5 +1,5 @@
 ---
-name: audio-ios-help
+name: ios-audio-help
 description: Get help with iOS audio/music app development
 ---
 

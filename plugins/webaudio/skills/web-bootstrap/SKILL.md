@@ -1,5 +1,5 @@
 ---
-name: audio-web-bootstrap
+name: webaudio-bootstrap
 description: Bootstrap a web-based audio/music sequencer app
 ---
 
