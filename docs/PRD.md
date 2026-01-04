@@ -44,19 +44,35 @@ Four layers of context, each with a distinct purpose:
 - **Recipes** guide combining skills from multiple packs. They're referenced, not loaded into context wholesale.
 - **Conversation** is working memory. Don't pollute it with permanent knowledge—that belongs in CLAUDE.md or skills.
 
+### Non-Goal: Conversational Memory
+
+**Mixboard does not rely on conversational memory for correctness.**
+
+Anything important must live in CLAUDE.md, Skills, or Recipes. If a workflow depends on Claude "remembering" something from earlier in a conversation, that's a bug—the knowledge should be externalized to the appropriate layer.
+
 ---
 
 ## Cognitive Modes
 
 Claude operates in one of five modes. These are not permanent agents—they're ephemeral cognitive stances that support different phases of work.
 
-| Mode | Purpose | Outputs |
-|------|---------|---------|
-| **Explore** | Understand codebase, find patterns, map dependencies | Codebase briefs, dependency maps |
-| **Architect** | Design decisions, tradeoffs, integration points | ADRs, design options, recommendations |
-| **Implement** | Write code in increments, stop at verification gates | Code changes, incremental commits |
-| **Review** | Adversarial check: edge cases, security, perf, maintainability | Issues, required fixes |
-| **Verify** | Run tests, typecheck, validate assumptions | Pass/fail, error reports |
+| Mode | Purpose | Allowed Actions | Required Artifact |
+|------|---------|-----------------|-------------------|
+| **Explore** | Understand codebase, find patterns, map dependencies | Read files, search, ask questions | Brief summary of findings |
+| **Architect** | Design decisions, tradeoffs, integration points | Propose options, evaluate tradeoffs | Decision record with rationale |
+| **Implement** | Write code in increments, stop at verification gates | Edit files, run builds | Code changes, commit-ready |
+| **Review** | Adversarial check: edge cases, security, perf | Read and critique, identify issues | Blocking issues list (or explicit "no issues") |
+| **Verify** | Run tests, typecheck, validate assumptions | Run commands, check outputs | Pass/fail with evidence |
+
+### Mode Enforcement
+
+Each mode constrains what actions are allowed:
+
+- **Explore** may not modify files
+- **Architect** may not write implementation code
+- **Implement** may not introduce new architectural decisions—if design questions arise, switch to Architect
+- **Review** may not modify code—it produces issues, not fixes
+- **Verify** may not skip failures—all results must be reported
 
 ### Mode Discipline
 
