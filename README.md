@@ -1,60 +1,45 @@
-# 🎛️ mixboard
+# mixboard
 
-**Stop loading every skill everywhere. Start mixing what you need.**
+A personal plugin marketplace for Claude Code. Load skills per-project instead of globally.
 
-Claude Code is powerful, but context is finite. If you've got 30 skills loaded globally, you're burning tokens before you type a single character. Mixboard fixes that.
+## Why
 
-## The Problem
+Global skills load everywhere. A Babylon.js skill loads in your Python project. iOS patterns load when you're building a web app. Mixboard lets you install skill packs only where they're relevant.
 
-```
-Your Claude Code session starts...
-├── Loading vim-tips... (you're in a web project)
-├── Loading babylon-shaders... (it's a Node CLI)
-├── Loading ios-audio... (there's no Xcode in sight)
-└── 35% of context gone. You haven't done anything yet.
-```
-
-## The Solution
-
-Mixboard is a personal plugin marketplace. Install skill packs per-project. Load babylon skills in your game project. Load webaudio in your sequencer. Load nothing you don't need.
+## Structure
 
 ```
-Your Claude Code session starts...
-├── Loading webaudio-bootstrap... (it's a sequencer project)
-├── Loading webaudio-tonejs... (perfect)
-└── 4% of context used. Let's build.
+mixboard/
+├── .claude-plugin/
+│   └── marketplace.json     # Registry of available packs
+└── plugins/
+    └── <pack-name>/
+        ├── .claude-plugin/plugin.json
+        └── skills/
+            └── <skill-name>/SKILL.md
 ```
 
-## Skill Packs
+## Available Packs
 
-| Pack | What It Does | Skills |
-|------|--------------|--------|
-| **babylon** | Procedural 3D with Babylon.js | `procedural` `shaders` `physics` `architecture` |
-| **webaudio** | Browser audio with Tone.js | `tonejs-advanced` `web-bootstrap` |
-| **nextjs** | Next.js 14+ patterns | `nextjs-patterns` |
-| **ios** | SwiftUI + Core Audio | `audio-help` |
-| **hackathon** | Ship fast under pressure | `bootstrap` `quick-feature` `web-audio-starter` |
-| **workflow** | Track friction, wins, ideas | `log-win` `log-friction` `log-idea` `weekly-review` `checklist` |
-| **healthtech** | HIPAA-focused dev | `architecture-review` |
+| Pack | Description |
+|------|-------------|
+| `babylon` | Babylon.js procedural generation, shaders, physics |
+| `webaudio` | Tone.js, Web Audio API, synthesis patterns |
+| `nextjs` | Next.js 14+ App Router, Server Actions, SSR/ISR |
+| `ios` | SwiftUI and Core Audio development |
+| `hackathon` | Quick bootstrapping under time pressure |
+| `workflow` | Track wins, friction, ideas, weekly reviews |
+| `healthtech` | HIPAA-focused architecture review |
 
-## Installation
+## Usage
 
-Add mixboard as a marketplace:
-
-```bash
-claude plugin marketplace add josh/mixboard
-```
-
-Install packs you need:
+Install packs for a project:
 
 ```bash
 claude plugin install babylon@mixboard
-claude plugin install webaudio@mixboard hackathon@mixboard
 ```
 
-## Per-Project Setup
-
-Add to your project's `.claude/settings.json`:
+Or add to your project's `.claude/settings.json`:
 
 ```json
 {
@@ -62,43 +47,18 @@ Add to your project's `.claude/settings.json`:
 }
 ```
 
-Now those skills only load in that project.
+## Creating a Pack
 
-## Why "Mixboard"?
-
-Like a mixing board routes audio signals, this routes Claude skills. Slide up the faders you need. Mute everything else. Your mix, your session.
-
-## Structure
-
-```
-mixboard/
-├── .claude-plugin/
-│   └── marketplace.json     # Registry of all packs
-└── plugins/
-    ├── babylon/
-    │   ├── .claude-plugin/plugin.json
-    │   └── skills/
-    │       ├── procedural/SKILL.md
-    │       ├── shaders/SKILL.md
-    │       ├── physics/SKILL.md
-    │       └── architecture/SKILL.md
-    ├── webaudio/
-    ├── nextjs/
-    ├── ios/
-    ├── hackathon/
-    ├── workflow/
-    └── healthtech/
+1. Create `plugins/<name>/.claude-plugin/plugin.json`:
+```json
+{
+  "name": "my-pack",
+  "description": "What this pack provides",
+  "version": "0.1.0"
+}
 ```
 
-## Make Your Own Pack
-
-1. Create a directory in `plugins/`
-2. Add `.claude-plugin/plugin.json`
-3. Add skills in `skills/<name>/SKILL.md`
-4. Update `marketplace.json`
-
-Skills use frontmatter:
-
+2. Add skills in `plugins/<name>/skills/<skill>/SKILL.md`:
 ```markdown
 ---
 name: my-pack-skill-name
@@ -108,13 +68,8 @@ description: What this skill helps Claude do
 Your skill prompt here...
 ```
 
-## Results
+3. Register in `marketplace.json`
 
-Before mixboard: **35% context used at baseline**
-After mixboard: **~5% context used at baseline**
+## License
 
-That's 60k tokens back. Use them for actual work.
-
----
-
-*Built to make Claude Code sessions leaner. Fork it, remix it, make it yours.*
+MIT
