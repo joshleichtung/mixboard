@@ -1,225 +1,257 @@
-# Mixboard PRD
+# Mixboard PRD v0.2
 
 ## Vision
 
-A composable skill system for Claude Code that covers the full software development lifecycle—from product ideation through design, implementation, and deployment.
+A composable skill system for Claude Code that supports the full software development lifecycle—from product ideation through design, implementation, and verification.
+
+Mixboard is not a folder of prompts. It's a workflow contract: skills load on demand, compose into recipes, and operate within defined cognitive modes to produce reliable, verifiable work.
 
 ## Problem
 
-Claude Code skills today fall into two categories:
+Claude Code skills today have two failure modes:
 
-1. **Too generic**: General coding assistance that doesn't leverage domain expertise
-2. **Too narrow**: Hyper-specific skills that only help with one framework or task
+1. **Too generic** — General coding assistance that doesn't leverage domain expertise
+2. **Too narrow** — Hyper-specific skills that only help with one framework or task
 
-Neither approach supports how developers actually work: moving fluidly between product thinking, system design, implementation, and iteration—often within the same session.
+Neither supports how developers actually work: moving between exploration, design, implementation, and review—often within the same session—while maintaining context discipline.
 
-Additionally, loading all skills globally wastes context. A 3D game project doesn't need iOS audio skills. A backend service doesn't need UI component patterns.
+Additionally:
+- Loading all skills globally wastes context
+- Skills drift as frameworks evolve, with no stability contract
+- No clear separation between project identity (CLAUDE.md) and procedural knowledge (skills)
 
 ## Solution
 
-Mixboard organizes skills into **packs** that can be installed per-project. Packs are grouped by:
-
-1. **SDLC Phase** — What stage of development are you in?
-2. **Technology Domain** — What stack are you building with?
-
-This lets developers compose exactly the skills they need for their current project and workflow.
+Mixboard organizes skills into composable **packs** installed per-project, operating within a defined **context model** and **cognitive mode discipline**.
 
 ---
 
-## Skill Taxonomy
+## Context Model
 
-### Phase 1: Product & Ideation
+Four layers of context, each with a distinct purpose:
 
-Skills that help before code is written.
+| Layer | Purpose | Mutability | Location |
+|-------|---------|------------|----------|
+| **CLAUDE.md** | Project identity, constraints, quality gates | Stable | Project root |
+| **Skills** | Procedures, patterns, domain expertise | Loaded on demand | Mixboard packs |
+| **Recipes** | Composition guides for multi-pack workflows | Reference material | Mixboard recipes |
+| **Conversation** | Ephemeral working memory | Discarded after session | Chat context |
 
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `product` | Requirements and feature definition | `prd-writer`, `user-story-generator`, `feature-prioritization` |
-| `research` | Technical research and evaluation | `tech-evaluation`, `architecture-options`, `build-vs-buy` |
+### Separation Rules
 
-### Phase 2: Design
-
-Skills for technical and UI design decisions.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `architecture` | System design patterns | `system-design`, `data-modeling`, `api-design` |
-| `ui-design` | Interface patterns and components | `component-patterns`, `responsive-layout`, `accessibility` |
-
-### Phase 3: Implementation — Frontend
-
-Skills for client-side development.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `react` | React patterns and best practices | `hooks-patterns`, `component-architecture`, `performance` |
-| `nextjs` | Next.js App Router, SSR, Server Actions | `app-router`, `server-actions`, `data-fetching` |
-| `tailwind` | Utility-first CSS patterns | `responsive-design`, `custom-themes`, `component-styling` |
-| `shadcn` | shadcn/ui component usage | `component-customization`, `theme-integration` |
-| `zustand` | State management patterns | `store-design`, `async-state`, `persistence` |
-
-### Phase 4: Implementation — Backend
-
-Skills for server-side development.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `node` | Node.js patterns | `async-patterns`, `error-handling`, `api-design` |
-| `supabase` | Supabase backend patterns | `auth`, `realtime`, `rls-policies`, `edge-functions` |
-| `postgres` | Database design and queries | `schema-design`, `query-optimization`, `migrations` |
-
-### Phase 5: Implementation — Specialized Domains
-
-Skills for specific application types.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `webaudio` | Browser audio with Tone.js/Web Audio API | `synthesis`, `scheduling`, `effects-chains`, `sequencers` |
-| `ios` | SwiftUI and iOS audio development | `swiftui-patterns`, `core-audio`, `audiokit` |
-| `babylon` | 3D graphics with Babylon.js | `procedural-generation`, `shaders`, `physics`, `scene-architecture` |
-| `gamedev` | Game development patterns | `game-loop`, `input-handling`, `state-machines` |
-
-### Phase 6: Quality & Deployment
-
-Skills for shipping and maintaining software.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `testing` | Test strategy and implementation | `unit-testing`, `e2e-playwright`, `test-architecture` |
-| `deployment` | CI/CD and hosting | `vercel`, `fly-io`, `docker`, `github-actions` |
-| `observability` | Monitoring and debugging | `logging`, `error-tracking`, `performance-monitoring` |
-
-### Cross-Cutting
-
-Skills useful across all phases.
-
-| Pack | Purpose | Example Skills |
-|------|---------|----------------|
-| `typescript` | TypeScript patterns and type safety | `strict-typing`, `generics`, `utility-types` |
-| `workflow` | Development process tracking | `log-friction`, `log-wins`, `weekly-review` |
+- **CLAUDE.md** stays small. It defines *what* the project is and *what constraints* apply. It does not contain procedures.
+- **Skills** contain *how* to do things. They load only when relevant packs are installed.
+- **Recipes** guide combining skills from multiple packs. They're referenced, not loaded into context wholesale.
+- **Conversation** is working memory. Don't pollute it with permanent knowledge—that belongs in CLAUDE.md or skills.
 
 ---
 
-## Technology Coverage Analysis
+## Cognitive Modes
 
-Based on analysis of common project patterns:
+Claude operates in one of five modes. These are not permanent agents—they're ephemeral cognitive stances that support different phases of work.
 
-| Technology | Frequency | Priority |
-|------------|-----------|----------|
-| TypeScript | Very High | P0 |
-| React | Very High | P0 |
-| Tailwind CSS | High | P0 |
-| Web Audio / Tone.js | High | P0 |
-| Next.js | High | P0 |
-| Node.js | High | P1 |
-| Vite | Medium | P2 |
-| Zustand | Medium | P1 |
-| Babylon.js | Medium | P0 (specialized) |
-| shadcn/ui | Medium | P1 |
-| Swift/SwiftUI | Medium | P0 (specialized) |
-| Supabase | Medium | P1 |
-| Playwright | Medium | P2 |
+| Mode | Purpose | Outputs |
+|------|---------|---------|
+| **Explore** | Understand codebase, find patterns, map dependencies | Codebase briefs, dependency maps |
+| **Architect** | Design decisions, tradeoffs, integration points | ADRs, design options, recommendations |
+| **Implement** | Write code in increments, stop at verification gates | Code changes, incremental commits |
+| **Review** | Adversarial check: edge cases, security, perf, maintainability | Issues, required fixes |
+| **Verify** | Run tests, typecheck, validate assumptions | Pass/fail, error reports |
+
+### Mode Discipline
+
+**Claude operates in one mode at a time and must switch modes intentionally when changing intent.**
+
+This preserves verification integrity and prevents mode bleed. Examples of violations:
+- Implementing while still exploring (leads to half-understood code)
+- Reviewing your own just-written code without mode switch (confirmation bias)
+- Skipping Verify after Implement (shipping untested changes)
+
+Mode switches should be explicit: "Switching to Review mode to check edge cases."
+
+---
+
+## Skill Packs
+
+### By SDLC Phase
+
+| Phase | Packs | Purpose |
+|-------|-------|---------|
+| **Ideation** | `product` | PRDs, user stories, prioritization |
+| **Design** | `architecture` | System design, API design, data modeling |
+| **Frontend** | `react`, `nextjs`, `tailwind`, `shadcn`, `zustand` | UI implementation |
+| **Backend** | `node`, `supabase`, `postgres` | Server-side, data, auth |
+| **Specialized** | `webaudio`, `ios`, `babylon` | Domain-specific expertise |
+| **Quality** | `testing`, `deployment` | Verification, shipping |
+| **Meta** | `workflow`, `typescript` | Process, cross-cutting patterns |
+
+### Priority Project Deep Dives
+
+These projects drive skill development priorities. Skills must support their specific architectural patterns and challenges.
+
+#### walker
+*Moebius-inspired 3D exploration game*
+
+Stack: Babylon.js, React, TypeScript, Tone.js, Zustand
+
+| Skill Area | What It Covers |
+|------------|----------------|
+| Scene architecture | Entity/component patterns, scene graph organization, asset loading |
+| Render loop | Frame budget hygiene, perf profiling, deterministic updates |
+| Audio-visual sync | Tone.js Transport synced to Babylon frame clock, positional audio |
+| State management | Zustand stores for game state, input handling, save/load |
+| Procedural generation | Noise functions, terrain generation, distribution algorithms |
+| Shaders | Cel-shading, post-processing, custom materials |
+
+#### synthualizer
+*Educational synthesis visualizer*
+
+Stack: Next.js 14, React, TypeScript, Tailwind, Web Audio API, Zustand
+
+| Skill Area | What It Covers |
+|------------|----------------|
+| SSR/CSR boundaries | Web Audio requires client-side; patterns for App Router hydration |
+| Audio graph visualization | AnalyserNode, FFT, time-domain rendering to Canvas |
+| State separation | UI state (Zustand) vs audio engine state (Web Audio graph) |
+| Accessibility | Keyboard navigation for controls, reduced motion, screen reader support |
+| Educational UX | Progressive disclosure, interactive parameter exploration |
+
+#### maxichord
+*iOS omnichord-inspired instrument*
+
+Stack: Swift 5.9+, SwiftUI, AudioKit 5.6.2
+
+| Skill Area | What It Covers |
+|------------|----------------|
+| Audio session | Configuration, interruption handling, route changes (headphones/speakers) |
+| Low-latency patterns | Avoiding UI-thread audio work, buffer size tuning |
+| Touch-to-sound pipeline | Touch event → audio trigger with minimal latency |
+| AudioKit specifics | Node graph patterns, effects chains, MIDI (future) |
+| Testing | Pragmatic audio behavior testing, not academic purity |
+
+---
+
+## Recipes
+
+Recipes are composition guides for common multi-pack scenarios. They don't create new packs—they document how to use existing packs together.
+
+| Recipe | Packs Used | Pattern |
+|--------|------------|---------|
+| `nextjs-supabase-realtime` | nextjs, supabase | Auth flow, RLS policies, Realtime subscriptions, optimistic UI |
+| `babylon-webaudio-sync` | babylon, webaudio | Frame-synced audio scheduling, positional audio, Transport integration |
+| `nextjs-webaudio-ssr` | nextjs, webaudio | Client-only audio initialization, hydration patterns, dynamic imports |
+| `ios-audiokit-session` | ios | Audio session setup, interruption handling, background audio |
+
+Recipes are referenced during Architect mode and applied during Implement mode.
+
+---
+
+## Golden Tasks
+
+Normative sanity checks for the Mixboard workflow. These aren't illustrative examples—they're lightweight regression tests. If a skill pack update breaks the ability to complete these tasks, the update is wrong.
+
+### walker
+
+| Task | Tests |
+|------|-------|
+| Add a new procedural terrain biome | babylon-procedural, scene architecture, Zustand state |
+| Implement character ability with physics + audio feedback | babylon-physics, webaudio scheduling, state sync |
+| Debug frame rate regression | Explore mode, render loop skills, perf profiling |
+
+### synthualizer
+
+| Task | Tests |
+|------|-------|
+| Add a new oscillator visualization | webaudio FFT, Canvas rendering, component architecture |
+| Implement accessible keyboard navigation | a11y patterns, focus management, ARIA |
+| Fix SSR hydration mismatch with audio context | nextjs-webaudio-ssr recipe, client-only patterns |
+
+### maxichord
+
+| Task | Tests |
+|------|-------|
+| Add a new instrument voice | AudioKit node graph, sound design patterns |
+| Handle audio route change (headphones → speakers) | Audio session management, interruption handling |
+| Reduce touch-to-sound latency | Low-latency patterns, buffer tuning, profiling |
+
+---
+
+## Skill Stability
+
+Skills are not timeless. Frameworks evolve, best practices change, and skills must adapt.
+
+### Current Approach (v0.2)
+- Skills are manually reviewed when project dependencies upgrade
+- Breaking changes are caught by Golden Tasks
+- No formal versioning yet
+
+### Future (deferred)
+- Version tagging per pack
+- Changelog per pack documenting breaking changes
+- Compatibility matrix with framework versions
+
+This is explicitly deferred. The overhead of versioning infrastructure isn't justified until there are multiple consumers or significant churn.
 
 ---
 
 ## Roadmap
 
-### v0.1 — Foundation (Current)
+### v0.1 — Foundation (Complete)
+Domain-specific packs for active development:
+- babylon, webaudio, ios, nextjs, hackathon, workflow, healthtech
 
-Specialized domain packs for active development:
+### v0.2 — Workflow & Depth (Current)
+- Context Model and Cognitive Modes documentation
+- Recipes for common pack compositions
+- Golden Tasks for priority projects
+- Deeper skill content for walker, synthualizer, maxichord
 
-- [x] `babylon` — Procedural generation, shaders, physics
-- [x] `webaudio` — Tone.js, synthesis, scheduling
-- [x] `ios` — SwiftUI, Core Audio
-- [x] `nextjs` — App Router patterns
-- [x] `hackathon` — Rapid prototyping
-- [x] `workflow` — Development tracking
-
-### v0.2 — Implementation Expansion
-
+### v0.3 — Implementation Expansion
 Common frontend/backend patterns:
+- tailwind, zustand, shadcn, supabase, typescript
 
-- [ ] `tailwind` — Responsive design, theming
-- [ ] `zustand` — Store patterns, async state
-- [ ] `shadcn` — Component customization
-- [ ] `supabase` — Auth, realtime, RLS
-- [ ] `typescript` — Advanced type patterns
-
-### v0.3 — SDLC Upstream
-
+### v0.4 — SDLC Upstream
 Product and design phase support:
+- product, architecture
 
-- [ ] `product` — PRDs, user stories, prioritization
-- [ ] `architecture` — System design, API design
-- [ ] `ui-design` — Component patterns, accessibility
-
-### v0.4 — Quality & Ops
-
-Testing and deployment:
-
-- [ ] `testing` — Unit, integration, E2E strategies
-- [ ] `deployment` — Vercel, Fly.io, Docker patterns
-- [ ] `observability` — Logging, monitoring
+### Future
+- Skill versioning and compatibility tracking
+- Community contribution model
+- Cross-project skill analytics
 
 ---
 
-## Skill Structure
+## Appendix
 
-Each skill follows this structure:
+### Folder Structure
 
 ```
-plugins/<pack>/
+mixboard/
 ├── .claude-plugin/
-│   └── plugin.json
-└── skills/
-    └── <skill-name>/
-        └── SKILL.md
+│   └── marketplace.json
+├── plugins/
+│   └── <pack>/
+│       ├── .claude-plugin/plugin.json
+│       └── skills/
+│           └── <skill>/SKILL.md
+├── recipes/
+│   └── <recipe>.md
+└── docs/
+    └── PRD.md
 ```
 
-### SKILL.md Format
-
-```markdown
----
-name: <pack>-<skill-name>
-description: What this skill helps Claude do
----
-
-[Skill prompt content]
-```
-
-### Naming Convention
-
-- Pack names: lowercase, single word when possible (`babylon`, `webaudio`)
-- Skill names: `<pack>-<descriptive-name>` (e.g., `babylon-procedural`, `webaudio-tonejs`)
-
----
-
-## Success Metrics
-
-1. **Context efficiency**: Baseline context usage < 10% with targeted packs
-2. **Coverage**: Skills available for all SDLC phases
-3. **Composability**: Any combination of packs works without conflicts
-4. **Velocity**: Measurable improvement in development speed for covered domains
-
----
-
-## Open Questions
-
-1. **Skill granularity**: Should packs be coarse (fewer, larger) or fine (many, focused)?
-2. **Cross-pack dependencies**: How to handle skills that span domains (e.g., "Next.js with Supabase")?
-3. **Version management**: How to handle breaking changes in underlying frameworks?
-4. **Community contribution**: What's the model for others to contribute packs?
-
----
-
-## Appendix: Project Type → Pack Mapping
+### Project Type → Pack Mapping
 
 | Project Type | Recommended Packs |
 |--------------|-------------------|
-| Next.js web app | `nextjs`, `tailwind`, `shadcn`, `zustand` |
-| Web audio/music app | `nextjs`, `webaudio`, `tailwind`, `zustand` |
-| 3D game/experience | `babylon`, `webaudio`, `typescript` |
-| iOS app | `ios`, `swiftui` |
-| Full-stack with Supabase | `nextjs`, `supabase`, `tailwind`, `shadcn` |
-| CLI tool | `node`, `typescript` |
-| Hackathon project | `hackathon`, plus domain-specific packs |
+| Next.js web app | nextjs, tailwind, shadcn, zustand |
+| Web audio/music app | nextjs, webaudio, tailwind, zustand |
+| 3D game/experience | babylon, webaudio, typescript |
+| iOS app | ios |
+| Full-stack with Supabase | nextjs, supabase, tailwind |
+| CLI tool | node, typescript |
+
+### Skill Naming Convention
+
+- Pack names: lowercase, single word (`babylon`, `webaudio`)
+- Skill names: `<pack>-<descriptor>` (`babylon-procedural`, `webaudio-tonejs`)
