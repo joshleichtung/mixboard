@@ -31,6 +31,16 @@ mixboard/
 | `workflow` | Track wins, friction, ideas, weekly reviews |
 | `healthtech` | HIPAA-focused architecture review |
 
+## Recipes
+
+Recipes are composition guides that combine multiple skills into a workflow. They're not skills themselves—they tell you *when* and *how* to apply skills together.
+
+| Recipe | Purpose |
+|--------|---------|
+| [babylon-third-person-exploration](recipes/babylon-third-person-exploration.md) | Camera follow + orbit for exploration games |
+| [babylon-stylized-desert-look](recipes/babylon-stylized-desert-look.md) | Cel shading + gradient sky for desert aesthetic |
+| [babylon-procedural-biomes-v0](recipes/babylon-procedural-biomes-v0.md) | Height-based object distribution with instancing |
+
 ## Usage
 
 Install packs for a project:
