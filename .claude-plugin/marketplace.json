@@ -50,6 +50,13 @@
       "description": "Development workflow tracking - wins, friction, ideas, weekly reviews",
       "category": "workflow",
       "keywords": ["workflow", "productivity", "retrospective"]
+    },
+    {
+      "name": "healthtech",
+      "source": "./plugins/healthtech",
+      "description": "Health tech development - HIPAA compliance, architecture review, PHI handling",
+      "category": "work",
+      "keywords": ["hipaa", "healthtech", "compliance", "architecture", "phi"]
     }
   ]
 }
