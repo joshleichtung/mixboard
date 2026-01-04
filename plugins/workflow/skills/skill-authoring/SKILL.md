@@ -87,16 +87,19 @@ Inputs should be verifiable. If an input is missing, the skill should not procee
 
 ### Outputs
 
-Declare what the skill produces:
+Declare what the skill produces and how to verify it:
 
 ```markdown
 ## Outputs
 - Terrain mesh added to scene
+  - Verify: mesh visible in scene inspector, vertex count logged
 - Zustand store updated with terrain metadata
-- Performance budget validated (< 16ms frame time)
+  - Verify: devtools show terrain slice populated
+- Performance budget validated
+  - Verify: FPS overlay shows < 16ms avg frame time
 ```
 
-Outputs should be concrete and checkable.
+Outputs should be concrete and include verification evidence. This makes Verify mode actionable.
 
 ### Assumptions
 
@@ -144,14 +147,17 @@ Skills are guidance, not automation. They do not invoke tools unless:
 
 Most skills are "passive"—they inform Claude's approach but don't take actions.
 
-### 4. No Architectural Decisions
+### 4. No Project-Level Architectural Decisions
 
-Skills provide implementation patterns, not design choices. If a skill encounters an architectural question:
-- Stop and note the decision needed
-- Defer to Architect mode
-- Do not embed opinions about system design
+Skills may specify default patterns with escape hatches, but must defer final project-level choices to Architect mode.
+
+- Provide options and tradeoffs, not mandates
+- Suggest a default when one is clearly conventional
+- Note when the choice depends on project context
 
 **Wrong**: "Use Redux for state management"
+**Wrong**: "Always use ECS architecture"
+**Right**: "Default: ECS-lite pattern for entity management. Alternative: scene-component if entity count < 50. See Architect mode for project-specific choice."
 **Right**: "Integrate with the project's state management solution (see CLAUDE.md)"
 
 ### 5. No Unbounded Scope
@@ -189,10 +195,10 @@ Before finalizing a skill, verify:
 - [ ] Name follows `<pack>-<descriptor>` convention
 - [ ] Description is one line and actionable
 - [ ] Inputs are explicit and verifiable
-- [ ] Outputs are concrete and checkable
+- [ ] Outputs are concrete with verification evidence
 - [ ] Assumptions are stated as preconditions
 - [ ] No project-specific logic
 - [ ] No conversational memory reliance
 - [ ] No unauthorized tool calls
-- [ ] No architectural decisions embedded
+- [ ] No project-level arch decisions (options + tradeoffs OK, mandates not)
 - [ ] Scope is bounded and completable
