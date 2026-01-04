@@ -68,6 +68,30 @@ function createTerrain(
 }
 ```
 
+### 1b. If Lighting Looks Wrong (Flat or Inverted)
+
+`mesh.createNormals()` usually works, but if lighting appears flat or inverted, use `VertexData.ComputeNormals` for more control:
+
+```typescript
+import { VertexData } from '@babylonjs/core';
+
+function recomputeNormalsManually(mesh: Mesh): void {
+  const positions = mesh.getVerticesData(VertexBuffer.PositionKind);
+  const indices = mesh.getIndices();
+  if (!positions || !indices) return;
+
+  const normals: number[] = [];
+  VertexData.ComputeNormals(positions, indices, normals);
+
+  mesh.setVerticesData(VertexBuffer.NormalKind, normals);
+}
+```
+
+**When to use this**:
+- Terrain appears uniformly lit (no shading variation)
+- Cel shader shows no tone differentiation
+- Normals point the wrong direction (dark when should be lit)
+
 ### 2. Noise Functions
 
 **Multi-octave sine (fast, deterministic):**
@@ -143,3 +167,10 @@ function createHeightQuery(
 ## Activation
 
 Activates when: terrain generation, heightmap, ground mesh, noise terrain, rolling hills, procedural ground
+
+---
+
+## Changelog
+
+- **Add**: Section 1b with `VertexData.ComputeNormals` alternative for when lighting looks wrong
+- **Clarify**: When to use manual normal recomputation vs `mesh.createNormals()`

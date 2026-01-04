@@ -46,7 +46,20 @@ interface PerfSnapshot {
 }
 
 function takeSnapshot(scene: Scene, engine: Engine): PerfSnapshot {
-  const instrumentation = scene.getInstrumentation();
+  // Instrumentation may be null if not enabled—handle gracefully
+  const instrumentation = scene.getInstrumentation?.();
+
+  // Draw calls: -1 means unavailable (instrumentation not enabled or no frames yet)
+  let drawCalls = -1;
+  if (instrumentation?.drawCallsCounter?.current !== undefined) {
+    drawCalls = instrumentation.drawCallsCounter.current;
+  }
+
+  // Triangles: estimate from vertex count (3 vertices per triangle)
+  let triangles = -1;
+  if (instrumentation?.totalVerticesCounter?.current !== undefined) {
+    triangles = Math.floor(instrumentation.totalVerticesCounter.current / 3);
+  }
 
   return {
     fps: Math.round(engine.getFps()),
@@ -55,12 +68,10 @@ function takeSnapshot(scene: Scene, engine: Engine): PerfSnapshot {
     materialCount: scene.materials.length,
     textureCount: scene.textures.length,
     particleCount: scene.particleSystems.reduce(
-      (sum, ps) => sum + ps.getActiveCount(), 0
+      (sum, ps) => sum + (ps.getActiveCount?.() ?? 0), 0
     ),
-    drawCalls: instrumentation?.drawCallsCounter?.current ?? -1,
-    triangles: instrumentation?.totalVerticesCounter?.current
-      ? Math.floor(instrumentation.totalVerticesCounter.current / 3)
-      : -1,
+    drawCalls,
+    triangles,
   };
 }
 ```
@@ -158,23 +169,27 @@ function checkDisposal(scene: Scene): void {
 ### 5. Disposal Helper
 
 ```typescript
-function disposeEntitySafely(node: TransformNode): void {
+import { TransformNode, Scene } from '@babylonjs/core';
+
+function disposeEntitySafely(node: TransformNode, scene: Scene): void {
   // Dispose child meshes first
   const meshes = node.getChildMeshes();
   for (const mesh of meshes) {
-    // Dispose material if not shared
+    // Dispose material only if this is the sole user
     if (mesh.material) {
       const users = scene.meshes.filter(m => m.material === mesh.material);
-      if (users.length === 1) {
+      if (users.length <= 1) {
         mesh.material.dispose();
       }
     }
     mesh.dispose();
   }
 
-  // Dispose the node
+  // Dispose the node itself
   node.dispose();
 }
+
+// Usage: disposeEntitySafely(myEntity, scene);
 ```
 
 ### 6. Common Issues Checklist
@@ -221,21 +236,30 @@ function runAuditChecklist(scene: Scene): void {
 
 ### 7. Full Audit Function
 
+**Important**: Instrumentation counters need at least one render frame to populate after being enabled.
+
 ```typescript
 function runFullAudit(scene: Scene, engine: Engine): void {
+  // Step 1: Enable instrumentation BEFORE rendering
   enableInstrumentation(scene);
 
-  // Wait a frame for instrumentation to populate
-  setTimeout(() => {
-    generatePerfReport(scene, engine);
-    checkDisposal(scene);
-    runAuditChecklist(scene);
-  }, 100);
+  // Step 2: Wait for at least one render frame to populate counters
+  // Using requestAnimationFrame ensures we wait for an actual frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Now counters should be populated
+      generatePerfReport(scene, engine);
+      checkDisposal(scene);
+      runAuditChecklist(scene);
+    });
+  });
 }
 
-// Usage
-runFullAudit(scene, engine);
+// Usage: call once scene is running
+// runFullAudit(scene, engine);
 ```
+
+**Note**: If drawCalls or triangles show -1, instrumentation wasn't enabled in time. Call `enableInstrumentation()` earlier (e.g., right after scene creation).
 
 ## Constraints
 
@@ -247,3 +271,12 @@ runFullAudit(scene, engine);
 ## Activation
 
 Activates when: performance audit, perf check, profile babylon, slow rendering, FPS drop, memory leak, draw calls
+
+---
+
+## Changelog
+
+- **Fix**: `disposeEntitySafely()` now accepts `scene` parameter (was using undefined `scene`)
+- **Fix**: `takeSnapshot()` now safely handles missing instrumentation (returns -1 vs crashing)
+- **Clarify**: `runFullAudit()` uses `requestAnimationFrame` to ensure counters populate
+- **Add**: Note explaining -1 values for drawCalls/triangles when instrumentation isn't ready

@@ -2,6 +2,10 @@
 
 Skills for building 3D games and experiences with Babylon.js.
 
+## Pack Guardrail
+
+> **Prefer minimal integration paths.** These skills should work with your existing codebase structure. Do not require a project-wide architecture rewrite to apply a skill. If a skill's patterns conflict with your current setup, adapt the skill—not your entire project.
+
 ## Skills
 
 | Skill | When to Use |

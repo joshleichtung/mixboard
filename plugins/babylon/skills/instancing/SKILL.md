@@ -19,8 +19,9 @@ Render many copies of a mesh efficiently using thin instances (GPU instancing) o
 
 - Single mesh with instances, or merged mesh
   - Verify: Inspector shows 1 mesh with N instances (not N separate meshes)
-  - Verify: Draw calls reduced (check `scene.getActiveMeshes().length`)
+  - Verify: `scene.meshes.length` reduced vs creating N separate meshes
   - Verify: Source mesh hidden (`isVisible = false`)
+  - Verify: FPS stable or improved (use babylon-perf-audit for draw call metrics)
 
 ## Assumptions
 
@@ -35,7 +36,7 @@ Render many copies of a mesh efficiently using thin instances (GPU instancing) o
 GPU-instanced rendering—one draw call for all copies:
 
 ```typescript
-import { Mesh, Matrix, Vector3 } from '@babylonjs/core';
+import { Mesh, Matrix, Vector3, Quaternion } from '@babylonjs/core';
 
 function createThinInstances(
   source: Mesh,
@@ -189,3 +190,11 @@ function updateInstancePosition(
 ## Activation
 
 Activates when: instancing, thin instances, merge meshes, optimize draw calls, many objects, batch rendering, GPU instancing
+
+---
+
+## Changelog
+
+- **Fix**: Added missing `Quaternion` import to thin instances code
+- **Fix**: Verification no longer claims `scene.getActiveMeshes().length` equals draw calls
+- **Clarify**: Refer to babylon-perf-audit for actual draw call metrics

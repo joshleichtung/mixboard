@@ -11,22 +11,25 @@ Set up cameras that follow or orbit around a target with smooth interpolation an
 
 ## Inputs
 
-- Camera reference (ArcRotateCamera or FreeCamera)
+- Camera reference:
+  - **Follow camera**: Use `FreeCamera` or `UniversalCamera` (position-based)
+  - **Orbit camera**: Use `ArcRotateCamera` (angle/radius-based)
 - Target to follow (position or TransformNode)
 - Smoothing parameters
-- Distance/angle constraints
+- Distance/angle constraints (orbit only)
 
 ## Outputs
 
 - Camera positioned and oriented correctly each frame
   - Verify: Camera follows target without snapping
-  - Verify: Camera respects distance limits (zoom in/out)
-  - Verify: Camera respects angle limits (can't look underground)
+  - Verify: Camera respects distance limits (orbit: zoom in/out)
+  - Verify: Camera respects angle limits (orbit: can't look underground)
   - Verify: Movement feels smooth, not jerky
 
 ## Assumptions
 
-- ArcRotateCamera for orbit, FreeCamera for first-person/custom
+- **Follow camera**: FreeCamera or UniversalCamera (direct position/rotation control)
+- **Orbit camera**: ArcRotateCamera (alpha/beta/radius control)
 - Target exists and has a position
 - Update called every frame with delta time
 
@@ -34,15 +37,24 @@ Set up cameras that follow or orbit around a target with smooth interpolation an
 
 ### 1. Smooth Follow Camera
 
+Uses `FreeCamera` or `UniversalCamera` for direct position control:
+
 ```typescript
-import { Vector3, ArcRotateCamera, TransformNode } from '@babylonjs/core';
+import { Vector3, FreeCamera, TransformNode, Scene } from '@babylonjs/core';
+
+function createFollowCamera(scene: Scene, target: Vector3): FreeCamera {
+  const camera = new FreeCamera('followCamera', new Vector3(0, 5, -10), scene);
+  camera.setTarget(target);
+  // Do NOT attach controls—we manage position manually
+  return camera;
+}
 
 class FollowCamera {
   private offset: Vector3;
   private smoothSpeed: number;
 
   constructor(
-    private camera: ArcRotateCamera,
+    private camera: FreeCamera,  // NOT ArcRotateCamera
     private target: TransformNode,
     options: {
       offset?: Vector3;
@@ -260,3 +272,11 @@ function transitionCamera(
 ## Activation
 
 Activates when: follow camera, orbit camera, camera smoothing, camera constraints, third-person camera, camera zoom limits
+
+---
+
+## Changelog
+
+- **Fix**: FollowCamera now uses `FreeCamera` (position-based), not `ArcRotateCamera`
+- **Clarify**: Inputs/Assumptions now distinguish follow (FreeCamera) vs orbit (ArcRotateCamera)
+- **Add**: `createFollowCamera()` helper with note about not attaching controls
