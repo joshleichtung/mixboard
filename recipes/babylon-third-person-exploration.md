@@ -17,6 +17,8 @@ Set up a smooth third-person camera that follows a character across procedural t
 | babylon | `babylon-camera` | Follow + orbit camera setup |
 | babylon | `babylon-character` | Velocity-based movement (already in place) |
 | babylon | `babylon-terrain` | Height query for camera ground awareness |
+| babylon | `babylon-render-loop` | Per-frame camera update orchestration |
+| babylon | `babylon-perf-audit` | FPS verification |
 
 ## Preconditions
 
@@ -88,6 +90,10 @@ Ensure camera.position.y >= terrainHeight + minClearance
 - [ ] Zoom in/out—respects distance limits
 - [ ] Walk to terrain edge—camera doesn't clip through ground
 - [ ] FPS stable (check with `babylon-perf-audit`)
+
+## Rollback/Safety
+
+Keep prior camera implementation on a feature branch. Verify each step before proceeding—camera regressions are immediately visible.
 
 ## Verification Checklist
 

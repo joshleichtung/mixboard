@@ -16,6 +16,7 @@ Create a cohesive stylized visual style for a desert environment: cel-shaded mat
 |------|-------|------|
 | babylon | `babylon-cel-shader` | Quantized lighting for stylized materials |
 | babylon | `babylon-sky-gradient` | Procedural gradient skybox |
+| babylon | `babylon-terrain` | Normal recomputation if lighting looks flat |
 
 ## Preconditions
 
@@ -47,14 +48,14 @@ Create a cohesive stylized visual style for a desert environment: cel-shaded mat
 | Sand shadow | Deeper ochre | `#A67B5B` |
 | Sky top | Deep blue | `#1E3A5F` |
 | Sky horizon | Pale orange | `#F5D6BA` |
-| Sun direction | 45° elevation, slight offset | `(0.5, 1, 0.3)` |
+| Light direction | 45° elevation (to-light vector, normalized) | `(0.41, 0.82, 0.41)` |
 
 **Shading Decisions**:
 
 | Decision | Default | Escape Hatch |
 |----------|---------|--------------|
-| Tone bands | 3 (lit, mid, shadow) | 2 for flatter look |
-| Edge highlight | Subtle rim light | None for softer feel |
+| Tone count | 3 (hardcoded in shader) | Modify shader for 2 or 4 |
+| Outline | Optional via `applyOutline()` | Skip for softer feel |
 | Sky gradient | 2-color vertical | 3-color for sunset |
 
 **Exit**: Palette documented, band count chosen.
@@ -65,20 +66,19 @@ Create a cohesive stylized visual style for a desert environment: cel-shaded mat
 
 **Step 1**: Create gradient sky
 ```
-babylon-sky-gradient → createGradientSkybox()
+babylon-sky-gradient → createGradientSky(scene, topColor, bottomColor)
 Top: #1E3A5F, Horizon: #F5D6BA
 ```
 
-**Step 2**: Set up directional light
+**Step 2**: Set up light direction for cel shader
 ```
-Ensure sun light exists at direction (0.5, 1, 0.3)
-Intensity ~1.5 for strong shadows
+lightDir = new Vector3(0.41, 0.82, 0.41)  // normalized, pointing TO light
+Pass to createCelMaterial() for all materials
 ```
 
 **Step 3**: Apply cel shader to terrain
 ```
-babylon-cel-shader → createCelMaterial()
-Base: #D4A574, bands: 3
+babylon-cel-shader → createCelMaterial(name, scene, '#D4A574', lightDir)
 Apply to terrain mesh
 ```
 
@@ -110,6 +110,10 @@ babylon-terrain → recomputeNormalsManually() if terrain shading is uniform
 - [ ] Check from far distance—silhouettes read clearly
 - [ ] Check normals—terrain isn't flat-shaded unintentionally
 - [ ] Performance stable (cel shader shouldn't impact FPS significantly)
+
+## Rollback/Safety
+
+Keep prior materials on a feature branch. Apply one material at a time and verify visually before proceeding.
 
 ## Verification Checklist
 

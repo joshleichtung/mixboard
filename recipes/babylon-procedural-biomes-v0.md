@@ -17,6 +17,7 @@ Add procedural object placement to terrain with biome-aware distribution. Object
 | babylon | `babylon-terrain` | Height queries for placement |
 | babylon | `babylon-distribution` | Poisson/jitter placement algorithms |
 | babylon | `babylon-instancing` | Efficient rendering of many objects |
+| babylon | `babylon-perf-audit` | Verify draw calls and FPS |
 
 ## Preconditions
 
@@ -63,27 +64,32 @@ Add procedural object placement to terrain with biome-aware distribution. Object
 
 **Goal**: Generate positions and render instances.
 
-**Step 1**: Generate positions per biome
+**Step 1**: Generate all candidate positions once
 ```
-babylon-distribution → poissonDisk() or gridJitter()
-For each biome zone, generate positions with appropriate spacing
-Filter by height to assign to correct biome
-```
-
-**Step 2**: Adjust Y to terrain height
-```
-For each position:
-  position.y = getHeightAt(position.x, position.z)
+babylon-distribution → poissonDisc() or gridJitter()
+Generate positions across entire terrain bounds
 ```
 
-**Step 3**: Create instances per object type
+**Step 2**: Snap all positions to terrain height
+```
+babylon-distribution → applyTerrainHeight(positions, getHeightAt)
+Now each position.y reflects actual terrain elevation
+```
+
+**Step 3**: Partition positions into biomes by height
+```
+valleyPositions = positions.filter(p => p.y < 2)
+slopePositions  = positions.filter(p => p.y >= 2 && p.y < 5)
+ridgePositions  = positions.filter(p => p.y >= 5)
+```
+
+**Step 4**: Create instances per biome/object type
 ```
 babylon-instancing → createThinInstances()
-Group positions by object type
-Apply scale/rotation variation
+For each biome, sample positions and apply to object meshes
 ```
 
-**Step 4**: (Optional) Add per-instance color variation
+**Step 5**: (Optional) Add per-instance color variation
 ```
 babylon-instancing → createColoredInstances()
 Subtle hue shifts for natural look
@@ -91,13 +97,19 @@ Subtle hue shifts for natural look
 
 **Pseudo-structure**:
 ```
-for each biome:
-  positions = distribute(bounds, spacing)
-  positions = filterByHeight(positions, biome.heightRange)
-  positions = snapToTerrain(positions)
+// Generate once, partition by height
+allPositions = poissonDisc(terrainSize, minSpacing)
+applyTerrainHeight(allPositions, getHeightAt)
 
+biomePositions = {
+  valley: allPositions.filter(p => p.y < 2),
+  slope:  allPositions.filter(p => p.y >= 2 && p.y < 5),
+  ridge:  allPositions.filter(p => p.y >= 5),
+}
+
+for each biome in biomePositions:
   for each objectType in biome.objects:
-    subset = sample(positions, objectType.ratio)
+    subset = sample(biomePositions[biome], objectType.ratio)
     createThinInstances(objectType.mesh, subset, {
       scaleRange: [0.8, 1.2],
       randomRotationY: true
@@ -121,6 +133,10 @@ for each biome:
 - [ ] Check close-up—objects sit on terrain surface
 - [ ] Run `babylon-perf-audit`—draw calls reduced via instancing
 - [ ] FPS stable with all objects visible
+
+## Rollback/Safety
+
+Keep prior scene state on a feature branch. Add one biome at a time and verify placement before adding the next.
 
 ## Verification Checklist
 
